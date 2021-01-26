@@ -19,7 +19,8 @@ def get_scores(URL):
         placements = {}
         school = school.find_all('td')
         for i in range(3, len(events) + 3):
-            placements[events[i - 3]] = int(school[i].text.strip())
+            if 'trial' not in events[i - 3].lower():
+                placements[events[i - 3]] = int(school[i].text.strip())
         data[school[0].text.strip()] = placements
 
     return data
@@ -40,5 +41,7 @@ def superscore(data):
 
 
 if __name__ == "__main__":
-    s = get_scores("https://scilympiad.com/ut-invite/Info/Results/255a4158-7761-44e6-b653-059a1928c259")
+    # UT Austin
+    s = get_scores("https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6")
     print(superscore(s))
+    print(superscore(s).keys())
