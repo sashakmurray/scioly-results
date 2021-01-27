@@ -38,9 +38,13 @@ def event_graph(data, event):
 
     x_values = range(1, len(placements) + 1)
     y_values = placements.values()
-    print(x_values)
-    print(y_values)
+
     ax.scatter(x_values, y_values)
+    ax.set_xlabel("School placement")
+    ax.set_ylabel("Placement in event")
+
+    ax.xaxis.set_ticks(range(0, len(placements) + 1, 10))
+    ax.yaxis.set_ticks(range(0, len(y_values) + 1, 10))
     plt.show()
 
 
@@ -49,5 +53,5 @@ if __name__ == "__main__":
         get_scores(
             "https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6"
         ),
-        "Designer Genes",
+        "GeoLogic Mapping",
     )
