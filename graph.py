@@ -18,7 +18,7 @@ def overall(data):
     ax1.set_title("Overall score distribution")
     ax1.set_xlabel("Placement")
     ax1.set_ylabel("Points")
-    ax1.xaxis.set_ticks(range(0, len(scores) + 1, 10))
+    ax1.xaxis.set_ticks(range(0, len(scores) + 1, 15))
 
     ax2.plot(range(1, 11), list(scores.values())[:10])
     ax2.set_title("Scores for top 10 teams")
@@ -32,6 +32,8 @@ def overall(data):
 
 def event_graph(data, event):
     fig, ax = plt.subplots()
+    ax.set_title(f"Placements in {event}")
+
     placements = {}
     for school, value in data.items():
         placements[school] = value[event]
@@ -43,15 +45,49 @@ def event_graph(data, event):
     ax.set_xlabel("School placement")
     ax.set_ylabel("Placement in event")
 
-    ax.xaxis.set_ticks(range(0, len(placements) + 1, 10))
-    ax.yaxis.set_ticks(range(0, len(y_values) + 1, 10))
+    ax.xaxis.set_ticks(range(0, len(placements) + 1, 15))
+    ax.yaxis.set_ticks(range(0, len(y_values) + 1, 15))
+    plt.show()
+
+
+def school_placements(data, school):
+    fig, ax = plt.subplots()
+
+    events = list(data.values())[0].keys()
+
+    placements = []
+    teams = []
+    for s in data:
+        if school in s:
+            placements.append(data[s])
+            teams.append(s[-1])
+    for team in placements:
+        ax.plot(events, team.values(), "o-", label=f"Team {teams[0]}")
+        del teams[0]
+
+    ax.set_ylabel("Placement")
+    plt.xticks(range(len(events)), rotation=90)
+    plt.tight_layout(rect=[0, 0, .95, .90])
+    ax.legend()
     plt.show()
 
 
 if __name__ == "__main__":
+    school_placements(
+        get_scores(
+            "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf",
+        ),
+        "High School South"
+    )
     event_graph(
         get_scores(
-            "https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6"
+            "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
         ),
-        "GeoLogic Mapping",
+        "Lean Mean Meme Machine",
+    )
+
+    overall(
+        get_scores(
+            "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
+        )
     )

@@ -6,12 +6,7 @@ def get_scores(URL):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
 
-    events = []
-    top_row = soup.find_all("th")
-    for event in top_row:
-        event = event.text.strip()
-        if event not in {"School/Team", "Place", "Total"}:
-            events.append(event)
+    events = get_events(soup)
 
     data = {}
     schools = soup.find("tbody")
@@ -24,6 +19,16 @@ def get_scores(URL):
         data[school[0].text.strip()] = placements
 
     return data
+
+
+def get_events(soup):
+    events = []
+    top_row = soup.find_all("th")
+    for event in top_row:
+        event = event.text.strip()
+        if event not in {"School/Team", "Place", "Total"}:
+            events.append(event)
+    return events
 
 
 def superscore(data):
@@ -43,5 +48,4 @@ def superscore(data):
 if __name__ == "__main__":
     # UT Austin
     s = get_scores("https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6")
-    print(superscore(s))
-    print(superscore(s).keys())
+    print(s)
