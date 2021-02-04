@@ -75,19 +75,19 @@ def school_placements(data, school):
 if __name__ == "__main__":
     school_placements(
         get_scores(
-            "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf",
+            "https://scilympiad.com/ut-invite/Info/Results/255a4158-7761-44e6-b653-059a1928c259",
         ),
-        "High School South"
+        "Lower Merion"
     )
-    event_graph(
-        get_scores(
-            "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
-        ),
-        "Lean Mean Meme Machine",
-    )
-
-    overall(
-        get_scores(
-            "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
-        )
-    )
+    # event_graph(
+    #     get_scores(
+    #         "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
+    #     ),
+    #     "Lean Mean Meme Machine",
+    # )
+    #
+    # overall(
+    #     get_scores(
+    #         "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
+    #     )
+    # )
