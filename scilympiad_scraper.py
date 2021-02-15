@@ -2,11 +2,14 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def get_scores(URL):
+def get_soup(URL):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
+    return soup
 
-    events = get_events(soup)
+
+def get_scores(soup):
+    events = get_all_events(soup)
 
     data = {}
     schools = soup.find("tbody")
@@ -24,18 +27,34 @@ def get_scores(URL):
 def get_events(soup):
     events = []
     top_row = soup.find_all("th")
-    for event in top_row:
+    for event in top_row[3:]:
         event = event.text.strip()
-        if event not in {"School/Team", "Place", "Total"}:
+        if "trial" not in event.lower():
             events.append(event)
+    return events
+
+
+def get_all_events(soup):
+    top_row = soup.find_all("th")
+    events = [event.text.strip() for event in top_row[3:]]
+    return events
+
+
+def get_trials(soup):
+    events = []
+    top_row = soup.find_all("th")
+    for i, event in enumerate(top_row[3:]):
+        event = event.text.strip()
+        if "trial" in event.lower():
+            events.append(i)
     return events
 
 
 def superscore(data):
     combined_results = {}
     for school in data:
-        if "," in school:
-            school_name = school[:school.find(',')]
+        if (c := ",") in school or (c := ".") in school:
+            school_name = school[:school.rfind(c)]
             if school_name not in combined_results:
                 combined_results[school_name] = data[school]
             else:
@@ -47,5 +66,5 @@ def superscore(data):
 
 if __name__ == "__main__":
     # UT Austin
-    s = get_scores("https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6")
+    s = get_scores(get_soup("https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6"))
     print(s)

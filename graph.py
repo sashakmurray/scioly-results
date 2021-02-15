@@ -60,34 +60,24 @@ def school_placements(data, school):
     for s in data:
         if school in s:
             placements.append(data[s])
-            teams.append(s[-1])
+            teams.append(s[s.rfind(" ") :])
     for team in placements:
         ax.plot(events, team.values(), "o-", label=f"Team {teams[0]}")
         del teams[0]
 
     ax.set_ylabel("Placement")
     plt.xticks(range(len(events)), rotation=90)
-    plt.tight_layout(rect=[0, 0, .95, .90])
+    plt.tight_layout(rect=[0, 0, 0.95, 0.90])
     ax.legend()
     plt.show()
 
 
 if __name__ == "__main__":
-    school_placements(
+    event_graph(
         get_scores(
-            "https://scilympiad.com/ut-invite/Info/Results/255a4158-7761-44e6-b653-059a1928c259",
+            get_soup(
+                "https://scilympiad.com/ca-svso/Info/Results/683b62fe-3b0e-47b4-839b-c2aadb6f7b23"
+            )
         ),
-        "Lower Merion"
+        "Water Quality",
     )
-    # event_graph(
-    #     get_scores(
-    #         "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
-    #     ),
-    #     "Lean Mean Meme Machine",
-    # )
-    #
-    # overall(
-    #     get_scores(
-    #         "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
-    #     )
-    # )
