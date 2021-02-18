@@ -22,11 +22,11 @@ def get_teams(file, sup):
 
 
 def event_list(file):
-    events = set()
+    events = []
     for event in file["Events"]:
         # don't add trial events
         if len(event) == 1:
-            events.add(event["name"])
+            events.append(event["name"])
     return events
 
 
@@ -69,5 +69,6 @@ def get_superscore(file):
     return get_results(file, teams)
 
 
-soaps = get_dict("soaps")
-print(get_superscore(soaps))
+if __name__ == "__main__":
+    soaps = get_dict("soaps")
+    print(get_superscore(soaps))
