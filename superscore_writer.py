@@ -1,12 +1,19 @@
 import ezsheets
 from scilympiad_scraper import *
+import sciolyFF_parser
 
 
-def write_placements(URL, ss):
-    soup = get_soup(URL)
-    scores = superscore(get_scores(soup))
+def write_placements(imp, ss):
+    if "http" in imp:
+        soup = get_soup(imp)
+        scores = superscore(get_scores(soup))
+        events = get_events(soup)
+    else:
+        file = sciolyFF_parser.get_dict(imp)
+        scores = sciolyFF_parser.get_superscore(file)
+        events = sciolyFF_parser.event_list(file)
+
     ss = ezsheets.Spreadsheet(ss)[0]
-    events = get_events(soup)
 
     rows = ss.getRows()
     rows[0] = ["School"] + list(events) + ["Team Score"]
@@ -29,6 +36,6 @@ def write_placements(URL, ss):
 
 if __name__ == "__main__":
     write_placements(
-        "https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6",
-        "1jQEImnVjz7m26ycYSVWq_dOLIDRpTsCsQc6zGMytOTA"
+        "soaps",
+        "1hPzt4RiXsR4i9vDmoR6XCD6eJ_tUXDlhJE6gU3qG4QU"
     )
