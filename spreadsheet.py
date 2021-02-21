@@ -1,17 +1,17 @@
 import ezsheets
-from scilympiad_scraper import *
-import sciolyFF_parser
+from scilympiad_results import *
+import sciolyFF_results
 
 
-def write_placements(imp, ss):
-    if "http" in imp:
-        soup = get_soup(imp)
+def write_placements(inp, ss):
+    if "scilympiad" in inp:
+        soup = get_soup(inp)
         scores = superscore(get_scores(soup))
         events = get_events(soup)
     else:
-        file = sciolyFF_parser.get_dict(imp)
-        scores = sciolyFF_parser.get_superscore(file)
-        events = sciolyFF_parser.event_list(file)
+        file = sciolyFF_results.get_dict(inp)
+        scores = sciolyFF_results.get_superscore(file)
+        events = sciolyFF_results.event_list(file)
 
     ss = ezsheets.Spreadsheet(ss)[0]
 
@@ -36,6 +36,6 @@ def write_placements(imp, ss):
 
 if __name__ == "__main__":
     write_placements(
-        "soaps",
-        "1hPzt4RiXsR4i9vDmoR6XCD6eJ_tUXDlhJE6gU3qG4QU"
+        "ggso",
+        "18Mw8hzuGcCSzD3gZLhvXRK9Cal4PD-GO0kYF_ODTcpg"
     )
