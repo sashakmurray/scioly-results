@@ -1,6 +1,6 @@
 import ezsheets
-from scilympiad_results import *
-import sciolyFF_results
+from scilympiad import *
+import sciolyFF
 
 
 def write_placements(inp, ss):
@@ -9,9 +9,9 @@ def write_placements(inp, ss):
         scores = superscore(get_scores(soup))
         events = get_events(soup)
     else:
-        file = sciolyFF_results.get_dict(inp)
-        scores = sciolyFF_results.get_superscore(file)
-        events = sciolyFF_results.event_list(file)
+        file = sciolyFF.get_dict(inp)
+        scores = sciolyFF.get_superscore(file)
+        events = sciolyFF.event_list(file)
 
     ss = ezsheets.Spreadsheet(ss)[0]
 

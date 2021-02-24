@@ -11,13 +11,14 @@ def get_dict(file_name):
 def get_teams(file, sup):
     teams = {}
     for team in file["Teams"]:
+        t = f'{team["school"]} {team["state"]}'
         if sup:
-            teams[team["number"]] = team["school"]
+            teams[team["number"]] = t
         else:
             try:
-                teams[team["number"]] = team["school"] + " " + team["suffix"]
+                teams[team["number"]] = f'{t} {team["suffix"]}'
             except KeyError:
-                teams[team["number"]] = team["school"]
+                teams[team["number"]] = t
     return teams
 
 
@@ -47,15 +48,13 @@ def get_results(file, teams):
         # it will be a key in the results dictionary
         if (e := item["event"]) in events:
             team = teams[item["team"]]
-            if e in results[team] and "place" in item:
-                results[team][e] = min(item["place"], results[team][e])
+            if "Harriton" in team and e == "Experiment and Data Analysis":
+                print(results[team])
+            p = item.get("place", num_teams)
+            if e in results[team]:
+                results[team][e] = min(p, results[team][e])
             else:
-                try:
-                    results[team][e] = item["place"]
-                except KeyError:
-                    # if the team did not participate in that event,
-                    # a no-show is worth the max possible amount of points
-                    results[team][e] = num_teams
+                results[team][e] = p
     return results
 
 
@@ -70,5 +69,5 @@ def get_superscore(file):
 
 
 if __name__ == "__main__":
-    soaps = get_dict("soaps")
-    print(get_superscore(soaps))
+    ggso = get_dict("ggso")
+    print(get_superscore(ggso))
