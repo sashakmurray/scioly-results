@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from scilympiad_scraper import *
+from scilympiad import *
 import mplcursors
 
 
@@ -52,6 +52,7 @@ def event_graph(data, event):
 
 def school_placements(data, school):
     fig, ax = plt.subplots()
+    ax.set_title(f"{school}'s placements")
 
     events = list(data.values())[0].keys()
 
@@ -62,7 +63,7 @@ def school_placements(data, school):
             placements.append(data[s])
             teams.append(s[s.rfind(" ") :])
     for team in placements:
-        ax.plot(events, team.values(), "o-", label=f"Team {teams[0]}")
+        ax.scatter(events, team.values(), label=f"Team {teams[0]}")
         del teams[0]
 
     ax.set_ylabel("Placement")
@@ -73,11 +74,11 @@ def school_placements(data, school):
 
 
 if __name__ == "__main__":
-    event_graph(
+    school_placements(
         get_scores(
             get_soup(
-                "https://scilympiad.com/ca-svso/Info/Results/683b62fe-3b0e-47b4-839b-c2aadb6f7b23"
+                "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
             )
         ),
-        "Water Quality",
+        "Lower Merion High School"
     )
