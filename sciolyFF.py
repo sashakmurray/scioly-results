@@ -8,7 +8,7 @@ def get_dict(file_name):
     return dictionary
 
 
-def get_teams(file, sup):
+def teams(file, sup):
     teams = {}
     for team in file["Teams"]:
         t = f'{team["school"]} {team["state"]}'
@@ -22,21 +22,40 @@ def get_teams(file, sup):
     return teams
 
 
-def event_list(file):
-    events = []
+def events(file):
+    e = []
     for event in file["Events"]:
         # don't add trial events
         if len(event) == 1:
-            events.append(event["name"])
-    return events
+            e.append(event["name"])
+    return e
 
 
 def tournament_name(file):
     return file["Tournament"]["short name"]
 
 
-def get_results(file, teams):
-    events = event_list(file)
+def get_medals(file):
+    return file["Tournament"]["medals"]
+
+
+def all_medals(file):
+    m = {}
+    num_medals = get_medals(file)
+    for team, placements in superscore(file).items():
+        m[team] = len([i for i in placements.values() if i <= num_medals])
+    return m
+
+
+def team_medals(file, team):
+    m = get_medals(file)
+    if c := superscore(file).get(team, None):
+        return len(list(filter(lambda x: x <= m, c.values())))
+    raise Exception("School did not compete. Try adding the state after the school name.")
+
+
+def results(file, teams):
+    es = events(file)
 
     num_teams = len(file["Teams"])
     results = {}
@@ -46,10 +65,8 @@ def get_results(file, teams):
     for item in file["Placings"]:
         # if the team number is one of the ones we are looking for,
         # it will be a key in the results dictionary
-        if (e := item["event"]) in events:
+        if (e := item["event"]) in es:
             team = teams[item["team"]]
-            if "Harriton" in team and e == "Experiment and Data Analysis":
-                print(results[team])
             p = item.get("place", num_teams)
             if e in results[team]:
                 results[team][e] = min(p, results[team][e])
@@ -59,15 +76,15 @@ def get_results(file, teams):
 
 
 def full_results(file):
-    teams = get_teams(file, sup=False)
-    return get_results(file, teams)
+    t = teams(file, sup=False)
+    return results(file, t)
 
 
-def get_superscore(file):
-    teams = get_teams(file, sup=True)
-    return get_results(file, teams)
+def superscore(file):
+    t = teams(file, sup=True)
+    return results(file, t)
 
 
 if __name__ == "__main__":
-    ggso = get_dict("ggso")
-    print(get_superscore(ggso))
+    soaps = get_dict("soaps")
+    print(all_medals(soaps))
