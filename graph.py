@@ -1,16 +1,17 @@
 import matplotlib.pyplot as plt
-from scilympiad import *
+import scilympiad
+import sciolyFF
 import mplcursors
 
 
-def points(data):
+def points(data: dict) -> dict:
     res = {}
     for school, placements in data.items():
         res[school] = sum(placements.values())
     return {k: v for k, v in sorted(res.items(), key=lambda x: x[1])}
 
 
-def overall(data):
+def overall(data: dict) -> None:
     fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(9, 4))
     scores = points(data)
 
@@ -30,7 +31,7 @@ def overall(data):
     plt.show()
 
 
-def event_graph(data, event):
+def event_graph(data: dict, event: str) -> None:
     fig, ax = plt.subplots()
     ax.set_title(f"Placements in {event}")
 
@@ -50,7 +51,7 @@ def event_graph(data, event):
     plt.show()
 
 
-def school_placements(data, school):
+def school_placements(data: dict, school: str) -> None:
     fig, ax = plt.subplots()
     ax.set_title(f"{school}'s placements")
 
@@ -61,7 +62,7 @@ def school_placements(data, school):
     for s in data:
         if school in s:
             placements.append(data[s])
-            teams.append(s[s.rfind(" ") :])
+            teams.append(s[s.rfind(" "):])
     for team in placements:
         ax.scatter(events, team.values(), label=f"Team {teams[0]}")
         del teams[0]
@@ -73,12 +74,21 @@ def school_placements(data, school):
     plt.show()
 
 
+def medals_graph(data: dict) -> None:
+    fig, ax = plt.subplots()
+    tournament = sciolyFF.tournament_name(data)
+    ax.set_title(f"{tournament} Overall Medal Distribution")
+    ax.set_xlabel("Team Placement (Superscore)")
+    ax.set_ylabel("Number of Medals")
+
+    medals = sciolyFF.all_medals(data)
+    ax.scatter(range(len(medals)), medals.values())
+    plt.xticks(range(0, len(medals) + 1, 5))
+    plt.yticks(range(0, max(medals.values()) + 1, 2))
+    plt.show()
+
+
 if __name__ == "__main__":
-    school_placements(
-        get_scores(
-            get_soup(
-                "https://scilympiad.com/mit/Info/Results/f7818bd3-00e8-466c-a1d0-fae5973a01cf"
-            )
-        ),
-        "Lower Merion High School"
-    )
+    soaps = sciolyFF.get_dict("soaps")
+    medals_graph(soaps)
+
