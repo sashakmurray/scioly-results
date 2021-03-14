@@ -140,6 +140,6 @@ cython_debug/
 .idea/
 
 # stuff for ezsheets
-credentials-sheets.json
-token-drive.pickle
 token-sheets.pickle
+token-drive.pickle
+credentials-sheets.json
