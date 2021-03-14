@@ -1,17 +1,17 @@
 import ezsheets
-from scilympiad import *
+import scilympiad
 import sciolyFF
 
 
-def write_placements(inp, ss):
+def write_placements(inp, ss: str) -> None:
     if "scilympiad" in inp:
-        soup = get_soup(inp)
-        scores = superscore(get_scores(soup))
-        events = get_events(soup)
+        soup = scilympiad.get_soup(inp)
+        scores = scilympiad.superscore(scilympiad.get_scores(soup))
+        events = scilympiad.get_events(soup)
     else:
         file = sciolyFF.get_dict(inp)
-        scores = sciolyFF.get_superscore(file)
-        events = sciolyFF.event_list(file)
+        scores = sciolyFF.superscore(file)
+        events = sciolyFF.events(file)
 
     ss = ezsheets.Spreadsheet(ss)[0]
 
@@ -36,6 +36,6 @@ def write_placements(inp, ss):
 
 if __name__ == "__main__":
     write_placements(
-        "ggso",
-        "18Mw8hzuGcCSzD3gZLhvXRK9Cal4PD-GO0kYF_ODTcpg"
+        "https://scilympiad.com/soup/Info/Results/e570869b-2dda-4e41-b7fd-85e899ccbb1f",
+        "1_oqZ2nwcS8XHQcPdyQbIJlwKCxCvaBz17sfAogYR4lA"
     )
