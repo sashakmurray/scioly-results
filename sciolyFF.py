@@ -1,14 +1,14 @@
 import yaml
 
 
-def get_dict(file_name):
+def get_dict(file_name: str) -> dict:
     file = f"sciolyFF_files/{file_name}.yaml"
     with open(file) as fin:
         dictionary = yaml.safe_load(fin)
     return dictionary
 
 
-def teams(file, sup):
+def teams(file: dict, sup: bool) -> dict:
     teams = {}
     for team in file["Teams"]:
         t = f'{team["school"]} {team["state"]}'
@@ -22,7 +22,7 @@ def teams(file, sup):
     return teams
 
 
-def events(file):
+def events(file: dict) -> list[str]:
     e = []
     for event in file["Events"]:
         # don't add trial events
@@ -31,31 +31,31 @@ def events(file):
     return e
 
 
-def tournament_name(file):
+def tournament_name(file: dict) -> str:
     return file["Tournament"]["short name"]
 
 
-def get_medals(file):
+def get_medals(file: dict) -> int:
     return file["Tournament"]["medals"]
 
 
-def all_medals(file):
+def all_medals(file: dict) -> dict:
     m = {}
     num_medals = get_medals(file)
     for team, placements in superscore(file).items():
-        m[team] = len([i for i in placements.values() if i <= num_medals])
+        m[team] = len([p for p in placements.values() if p <= num_medals])
     return m
 
 
-def team_medals(file, team):
+def team_medals(file: dict, team: str) -> int:
     m = get_medals(file)
     if c := superscore(file).get(team, None):
-        return len(list(filter(lambda x: x <= m, c.values())))
+        return len([p for p in c.values() if p <= m])
     raise Exception("School did not compete. Try adding the state after the school name.")
 
 
-def results(file, teams):
-    es = events(file)
+def results(file: dict, teams: dict) -> dict:
+    es: list = events(file)
 
     num_teams = len(file["Teams"])
     results = {}
@@ -75,16 +75,25 @@ def results(file, teams):
     return results
 
 
-def full_results(file):
+def full_results(file: dict) -> dict:
     t = teams(file, sup=False)
     return results(file, t)
 
 
-def superscore(file):
+def superscore(file: dict) -> dict:
     t = teams(file, sup=True)
     return results(file, t)
 
 
+def sorted_superscore(file: dict) -> list:
+    t = teams(file, sup=True)
+    s: dict = results(file, t)
+    res = []
+    for school, p in s:
+        res.append((school, p, sum(p)))
+    return res
+
+
 if __name__ == "__main__":
-    soaps = get_dict("soaps")
-    print(all_medals(soaps))
+    nats = get_dict("nats")
+    print(all_medals(nats))
