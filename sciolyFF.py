@@ -14,18 +14,8 @@ def download(link: str) -> None:
     file = "https://duosmium.org/data/{}.yaml".format
     f = requests.get(file(link[link.rfind("/"):]))
     dictionary = yaml.safe_load(f.content)
-    name = ""
     t = dictionary["Tournament"]
-    if "short name" in t:
-        name = t["short name"]
-    elif "name" in t:
-        name = t["name"]
-    elif t["level"] == "States":
-        name = f"{t['state']}_{t['level']}"
-    elif t["level"] == "Nationals":
-        name = t["level"]
-    else:
-        name = link[link.rfind("/"):]
+    name = tournament_name(dictionary)
 
     p = f"sciolyFF_files/{t['division']}/{t['year']}/{name}.yaml"
     directory = os.path.dirname(p)
@@ -61,7 +51,17 @@ def events(file: dict) -> list[str]:
 
 
 def tournament_name(file: dict) -> str:
-    return file["Tournament"]["short name"]
+    name = ""
+    t = file["Tournament"]
+    if "short name" in t:
+        name = t["short name"]
+    elif "name" in t:
+        name = t["name"]
+    elif t["level"] == "States":
+        name = f"{t['state']}_{t['level']}"
+    else:
+        name = t["level"]
+    return name
 
 
 def get_medals(file: dict) -> int:
@@ -77,8 +77,6 @@ def results(file: dict, teams: dict) -> dict:
         results[school] = {}
 
     for item in file["Placings"]:
-        # if the team number is one of the ones we are looking for,
-        # it will be a key in the results dictionary
         if (e := item["event"]) in es:
             team = teams[item["team"]]
             p = item.get("place", num_teams)
