@@ -1,11 +1,40 @@
 import yaml
+import requests
+import os
 
 
-def get_dict(file_name: str) -> dict:
-    file = f"sciolyFF_files/{file_name}.yaml"
-    with open(file) as fin:
-        dictionary = yaml.safe_load(fin)
+def get_dict(link: str) -> dict:
+    file = "https://duosmium.org/data/{}.yaml".format
+    f = requests.get(file(link[link.rfind("/"):]))
+    dictionary = yaml.safe_load(f.content)
     return dictionary
+
+
+def download(link: str) -> None:
+    file = "https://duosmium.org/data/{}.yaml".format
+    f = requests.get(file(link[link.rfind("/"):]))
+    dictionary = yaml.safe_load(f.content)
+    name = ""
+    t = dictionary["Tournament"]
+    if "short name" in t:
+        name = t["short name"]
+    elif "name" in t:
+        name = t["name"]
+    elif t["level"] == "States":
+        name = f"{t['state']}_{t['level']}"
+    elif t["level"] == "Nationals":
+        name = t["level"]
+    else:
+        name = link[link.rfind("/"):]
+
+    p = f"sciolyFF_files/{t['division']}/{t['year']}/{name}.yaml"
+    directory = os.path.dirname(p)
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    with open(p, "w+") as fout:
+        fout.write(f.content.decode("utf-8"))
 
 
 def teams(file: dict, sup: bool) -> dict:
@@ -85,6 +114,6 @@ def all_medals(file: dict) -> dict:
 
 
 if __name__ == "__main__":
-    nats = get_dict("nats")
-    print(all_medals(nats))
+    download("https://duosmium.org/results/2021-05-22_nationals_c")
+    nats = get_dict("https://duosmium.org/results/2021-05-22_nationals_c")
 
