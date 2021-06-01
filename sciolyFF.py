@@ -39,21 +39,6 @@ def get_medals(file: dict) -> int:
     return file["Tournament"]["medals"]
 
 
-def all_medals(file: dict) -> dict:
-    m = {}
-    num_medals = get_medals(file)
-    for team, placements in superscore(file).items():
-        m[team] = len([p for p in placements.values() if p <= num_medals])
-    return m
-
-
-def team_medals(file: dict, team: str) -> int:
-    m = get_medals(file)
-    if c := superscore(file).get(team, None):
-        return len([p for p in c.values() if p <= m])
-    raise Exception("School did not compete. Try adding the state after the school name.")
-
-
 def results(file: dict, teams: dict) -> dict:
     es: list = events(file)
 
@@ -86,14 +71,20 @@ def superscore(file: dict) -> dict:
 
 
 def sorted_superscore(file: dict) -> list:
-    t = teams(file, sup=True)
-    s: dict = results(file, t)
-    res = []
-    for school, p in s:
-        res.append((school, p, sum(p)))
-    return res
+    scores = superscore(file)
+    return sorted(scores.keys(), key=lambda x: sum(scores[x].values()))
+
+
+def all_medals(file: dict) -> dict:
+    m = {}
+    num_medals: int = get_medals(file)
+    sup: dict = superscore(file)
+    for team in sorted_superscore(file):
+        m[team] = len([p for p in sup[team].values() if p <= num_medals])
+    return m
 
 
 if __name__ == "__main__":
     nats = get_dict("nats")
     print(all_medals(nats))
+
