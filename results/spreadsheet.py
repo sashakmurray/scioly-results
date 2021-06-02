@@ -1,6 +1,5 @@
 import ezsheets
-import scilympiad
-import sciolyFF
+from . import sciolyFF, scilympiad
 
 
 def write_placements(inp, spreadsheet: str) -> None:

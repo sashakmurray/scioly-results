@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
-import scilympiad
-import sciolyFF
+from . import scilympiad, sciolyFF
 import mplcursors
 
 
