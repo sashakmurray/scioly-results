@@ -64,7 +64,12 @@ def superscore(data: dict) -> dict:
     return results
 
 
+def tournament_name(soup) -> str:
+    box = soup.find("a", class_="navbar-brand")
+    return box.text.strip()
+
 if __name__ == "__main__":
-    # UT Austin
+    # Solon Invitational
     s = get_soup("https://scilympiad.com/solon/Info/Results/abdbcd4e-bab9-435c-abc0-4d84964c7bf6")
-    print(s)
+    print(tournament_name(s))
+
