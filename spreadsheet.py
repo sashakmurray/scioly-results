@@ -3,7 +3,7 @@ import scilympiad
 import sciolyFF
 
 
-def write_placements(inp, ss: str) -> None:
+def write_placements(inp, spreadsheet: str) -> None:
     if "scilympiad" in inp:
         soup = scilympiad.get_soup(inp)
         scores = scilympiad.superscore(scilympiad.get_scores(soup))
@@ -13,7 +13,8 @@ def write_placements(inp, ss: str) -> None:
         scores = sciolyFF.superscore(file)
         events = sciolyFF.events(file)
 
-    ss = ezsheets.Spreadsheet(ss)[0]
+    ss = ezsheets.Spreadsheet(spreadsheet)
+    ss = ss[0]
 
     rows = ss.getRows()
     rows[0] = ["School"] + list(events) + ["Team Score"]

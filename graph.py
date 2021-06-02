@@ -12,7 +12,7 @@ def points(data: dict) -> dict:
 
 
 def overall(data: dict) -> None:
-    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(9, 4))
+    _, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(9, 4))
     scores = points(data)
 
     ax1.plot(range(1, len(scores) + 1), scores.values())
@@ -32,7 +32,7 @@ def overall(data: dict) -> None:
 
 
 def event_graph(data: dict, event: str) -> None:
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     ax.set_title(f"Placements in {event}")
 
     placements = {}
@@ -52,7 +52,7 @@ def event_graph(data: dict, event: str) -> None:
 
 
 def school_placements(data: dict, school: str) -> None:
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     ax.set_title(f"{school}'s placements")
 
     events = list(data.values())[0].keys()
@@ -75,8 +75,8 @@ def school_placements(data: dict, school: str) -> None:
 
 
 def medals_graph(data: dict) -> None:
-    fig, ax = plt.subplots()
-    tournament = sciolyFF.tournament_name(data)
+    _, ax = plt.subplots()
+    tournament: str = sciolyFF.tournament_name(data)
     ax.set_title(f"{tournament} Overall Medal Distribution")
     ax.set_xlabel("Team Placement (Superscore)")
     ax.set_ylabel("Number of Medals")
@@ -89,6 +89,6 @@ def medals_graph(data: dict) -> None:
 
 
 if __name__ == "__main__":
-    soaps = sciolyFF.get_dict("soaps")
-    medals_graph(soaps)
+    nats = sciolyFF.get_dict("nats")
+    medals_graph(nats)
 
