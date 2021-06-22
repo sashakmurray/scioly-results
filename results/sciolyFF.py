@@ -1,6 +1,5 @@
 import yaml
 import requests
-import os
 
 
 def get_dict(link: str) -> dict:
@@ -8,23 +7,6 @@ def get_dict(link: str) -> dict:
     f = requests.get(file(link[link.rfind("/"):]))
     dictionary = yaml.safe_load(f.content)
     return dictionary
-
-
-def download(link: str) -> None:
-    file = "https://duosmium.org/data/{}.yaml".format
-    f = requests.get(file(link[link.rfind("/"):]))
-    dictionary = yaml.safe_load(f.content)
-    t = dictionary["Tournament"]
-    name = tournament_name(dictionary)
-
-    p = f"sciolyFF_files/{t['division']}/{t['year']}/{name}.yaml"
-    directory = os.path.dirname(p)
-
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    with open(p, "w+") as fout:
-        fout.write(f.content.decode("utf-8"))
 
 
 def teams(file: dict, sup: bool) -> dict:
@@ -45,7 +27,7 @@ def events(file: dict) -> list[str]:
     e = []
     for event in file["Events"]:
         # don't add trial events
-        if len(event) == 1:
+        if "trial" not in event:
             e.append(event["name"])
     return e
 
@@ -109,9 +91,4 @@ def all_medals(file: dict) -> dict:
     for team in sorted_superscore(file):
         m[team] = len([p for p in sup[team].values() if p <= num_medals])
     return m
-
-
-if __name__ == "__main__":
-    download("https://duosmium.org/results/2021-05-22_nationals_c")
-    nats = get_dict("https://duosmium.org/results/2021-05-22_nationals_c")
 
