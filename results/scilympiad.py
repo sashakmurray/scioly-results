@@ -66,7 +66,7 @@ def superscore(data: dict) -> dict:
 
 def tournament_name(soup) -> str:
     box = soup.find("a", class_="navbar-brand")
-    return box.text.strip()
+    return box.text.strip().replace(" ", "_")
 
 if __name__ == "__main__":
     # Solon Invitational
