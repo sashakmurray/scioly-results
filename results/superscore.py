@@ -1,21 +1,7 @@
 import csv
 import os
 
-from . import scilympiad, sciolyFF
-
-
-def write_placements(link) -> None:
-    if "scilympiad" in link:
-        soup = scilympiad.get_soup(link)
-        scores = scilympiad.superscore(scilympiad.get_scores(soup))
-        events = scilympiad.get_events(soup)
-        name = scilympiad.tournament_name(soup)
-    else:
-        file = sciolyFF.get_dict(link)
-        scores = sciolyFF.superscore(file)
-        events = sciolyFF.events(file)
-        name = sciolyFF.tournament_name(file)
-
+def write_placements(scores, events, name) -> None:
     path = f"csv_out/{name}.csv"
     directory = os.path.dirname(path)
 
@@ -29,8 +15,6 @@ def write_placements(link) -> None:
         for school in scores:
             writer.writerow({"School": school} | (scores[school]))
 
-def main():
-    write_placements("https://duosmium.org/results/2021-05-22_nationals_c")
+def main(scores, events, name):
+    write_placements(scores, events, name)
 
-if __name__ == "__main__":
-    write_placements("https://duosmium.org/results/2021-05-22_nationals_c")
