@@ -43,7 +43,7 @@ def tournament_name(file: dict) -> str:
         name = f"{t['state']}_{t['level']}"
     else:
         name = t["level"]
-    return name
+    return name.replace(" ", "_")
 
 
 def get_medals(file: dict) -> int:
