@@ -1,15 +1,9 @@
 import yaml
-import requests
 import os
-from .sciolyFF import tournament_name
 
 
-def download(link: str) -> None:
-    file = "https://duosmium.org/data/{}.yaml".format
-    f = requests.get(file(link[link.rfind("/"):]))
-    dictionary = yaml.safe_load(f.content)
-    t = dictionary["Tournament"]
-    name = tournament_name(dictionary)
+def download(file: dict, name: str) -> None:
+    t = file["Tournament"]
 
     p = f"sciolyFF_files/{t['division']}/{t['year']}/{name}.yaml"
     directory = os.path.dirname(p)
@@ -17,8 +11,14 @@ def download(link: str) -> None:
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+    
     with open(p, "w+") as fout:
-        fout.write(f.content.decode("utf-8"))
+        #TODO: fix weird order thing?
+        yaml.dump(file, fout, default_flow_style=False)
+        #fout.write(f.content.decode("utf-8"))
 
-def main(link):
-    download(link)
+def main(file: dict, name: str, link: str) -> None:
+    if "duosmium" not in link:
+        raise Exception("Link must be from www.duosmium.org")
+
+    download(file, name)
