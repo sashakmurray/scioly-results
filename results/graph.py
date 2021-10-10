@@ -56,20 +56,18 @@ def school_placements(data: dict, school: str) -> None:
 
     events = list(data.values())[0].keys()
 
-    placements = []
-    teams = []
     for s in data:
-        if school in s:
-            placements.append(data[s])
-            teams.append(s[s.rfind(" "):])
-    for team in placements:
-        ax.scatter(events, team.values(), label=f"Team {teams[0]}")
-        del teams[0]
+        if school.lower() in s.lower():
+            placements = data[s]
+            break
+    else:
+        raise Exception(f"{school} did not participate")
+
+    ax.scatter(sorted(placements.keys(), key=lambda x: placements[x]), sorted(placements.values()))
 
     ax.set_ylabel("Placement")
     plt.xticks(range(len(events)), rotation=90)
     plt.tight_layout(rect=[0, 0, 0.95, 0.90])
-    ax.legend()
     plt.show()
 
 
@@ -88,6 +86,6 @@ def medals_graph(data: dict) -> None:
 
 
 if __name__ == "__main__":
-    nats = sciolyFF.get_dict("nats")
+    nats = sciolyFF.superscore(sciolyFF.get_dict("nats"))
     medals_graph(nats)
 
