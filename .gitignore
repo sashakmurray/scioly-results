@@ -146,3 +146,7 @@ credentials-sheets.json
 
 .DS_Store
 .vim/
+
+.python-version
+
+results.db
