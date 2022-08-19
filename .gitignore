@@ -146,3 +146,9 @@ credentials-sheets.json
 
 .DS_Store
 .vim/
+
+.python-version
+
+results.db
+csv_out/
+sciolyFF_files/
