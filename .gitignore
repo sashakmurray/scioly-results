@@ -150,3 +150,5 @@ credentials-sheets.json
 .python-version
 
 results.db
+csv_out/
+sciolyFF_files/
