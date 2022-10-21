@@ -17,21 +17,18 @@ class sciolyFF:
         self.name = self.get_tournament_name()
 
     def download(self) -> None:
-        t = self.file["Tournament"]
-        p = f"sciolyFF_files/{t['division']}/{t['year']}/{self.name}.yaml"
-        directory = os.path.dirname(p)
+        path = self.get_path(superscore=False)
+        directory = os.path.dirname(path)
 
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        print(p)
-        with open(p, "w+") as fout:
+        with open(path, "w+") as fout:
             # TODO: fix weird order thing?
             yaml.dump(self.file, fout, default_flow_style=False)
-            # fout.write(f.content.decode("utf-8"))
 
     def write_superscore(self) -> None:
-        path = f"csv_out/{self.name}.csv"
+        path = self.get_path(superscore=True)
         directory = os.path.dirname(path)
 
         if not os.path.exists(directory):
@@ -121,3 +118,11 @@ class sciolyFF:
                 except KeyError:
                     teams[team["number"]] = t
         return teams
+
+    def get_path(self, superscore=True):
+        t = self.file["Tournament"]
+        if superscore:
+            return f"superscores/{t['division']}/{t['year']}/{self.name}.csv"
+        else:
+            return f"sciolyFF_files/{t['division']}/{t['year']}/{self.name}.yaml"
+
